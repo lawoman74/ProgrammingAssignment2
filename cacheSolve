@@ -1,0 +1,48 @@
+I could not install git into my computer, becouse of technical problems, so I created the program in Rstudio and just 
+copy/paste into this file the entire assignment solution.
+
+##The assignment is to write a pair of functions that cache the inverse of a matrix.
+
+## First part: Writing the function that creates a special "matrix" object, caching its inverse. It contains 4 functions 
+## combined in the list.
+
+## initializing argument with a default value
+makeCacheMatrix <- function(x = matrix()) {
+## an object within "makeCacheMatrix" function that will be used in its later code 
+  invmx <- NULL 
+## defining the function "set"
+  set <- function(y) {                          
+    x <<- y
+## assigning the value of NULL for "invmx" object in the parent environment
+    invmx <<- NULL                              
+  }
+## setting the function "get" that can retrieve the "x" value from the parent environment
+  get <- function() x
+## defining the setter for the inverse "invmx"
+  setinv <- function(inverse) invmx <<- inverse 
+## setting the function "getinv" retrieving  data object "invmx" (similar to "get") 
+  getinv <- function() invmx    
+## assigning all functions created above as elements within a list, giving the name to each function
+## in this case we can use the "$" operator to access any function by name
+  list(set = set, get = get, setinv = setinv, getinv = getinv) 
+}
+## Second part: Designig the function to retrive the inverse matrix from the object of 'makeCacheMatrix'. 
+## If the inverse is alredy calculated the function will retrive the data from cache.
+
+## initializing argument "x" with a default value and ellipses to input additional arguments
+cacheSolve <- function(x, ...) {
+## calling "getinv" function 
+  invmx <- x$getinv()
+## checking the results:if the value is not "NULL" it gets  valid cached inverse matrix and returns 
+## it to the parent environment
+  if(!is.null(invmx)) {
+    message("getting cached data")
+    return(invmx)
+  }
+  data <- x$get()
+  invmx <- solve(data,...)
+## otherwise the function calls "setinv" function on "invmx" to set its inverse  and returns
+## the value in the parent envioronment
+  x$setinv(invmx)
+  return(invmx)
+}
